@@ -1,0 +1,64 @@
+apis = {
+    "mmm_beta": {
+        "api_key": "sk-REPLACE_ME",  # 请替换为你的实际 API Key
+        "base_url": "https://betaus.ifopen.ai/v1",
+    },
+    "local": {
+        "api_key": "sk-xxx",
+        "base_url": "http://127.0.0.1:5824/v1",
+    }
+}
+
+api_model_configs = {
+    "mmm_beta_gpt_4o_mini": {
+        "api_name": "mmm_beta",
+        "model": "gpt-4o-mini",
+        "params" : {}
+    },
+    "mmm_beta_gpt_4o": {
+        "api_name": "mmm_beta",
+        "model": "gpt-4o",
+        "params": {}
+    },
+    "mmm_beta_text_embedding_3_small": {
+        "api_name": "mmm_beta",
+        "model": "text-embedding-3-small",
+        "params" : {}
+    },
+    "local_qwen_3_8b_embedding": {
+        "api_name": "local",
+        "model": "Qwen/Qwen3-Embedding-8B",
+        "params": {}
+    },
+    "local_qwen_3_8b": {
+        "api_name": "local",
+        "model": "Qwen/Qwen3-8B",
+        "params": {}
+    },
+    "local_qwen_2_5_7b": {
+        "api_name": "local",
+        "model": "Qwen/Qwen2.5-7B-Instruct",
+        "params": {}
+    }
+}
+
+default_params = {
+ "timeout":300,   
+}
+
+def get_api_configuration(model_name: str, exclude_params: list = []):
+    api_config = apis[api_model_configs[model_name]["api_name"]]
+
+    configuration = {
+        **api_config,
+        **default_params,
+        **api_model_configs[model_name]["params"],
+        "model": api_model_configs[model_name]["model"]
+    }
+
+    for param in exclude_params:
+        configuration.pop(param)
+
+    return configuration
+
+

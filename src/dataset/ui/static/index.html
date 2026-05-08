@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Dataset Annotator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #f1f5f9;
+      --bg-tertiary: #e2e8f0;
+      --bg-card: #ffffff;
+      --border-color: #cbd5e1;
+      --border-subtle: #e2e8f0;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --accent: #0d9488;
+      --accent-hover: #0f766e;
+      --accent-glow: rgba(13, 148, 136, 0.12);
+      --danger: #dc2626;
+      --danger-hover: #b91c1c;
+      --warning: #d97706;
+      --success: #16a34a;
+      --font-ui: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', 'Fira Code', monospace;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.08), 0 4px 6px rgba(0,0,0,0.05);
+      --transition: all 0.2s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-ui);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px 32px;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .header-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--accent), #06b6d4);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: var(--shadow-md), 0 0 20px var(--accent-glow);
+    }
+
+    .header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 0;
+      background: linear-gradient(135deg, #0f172a, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header-subtitle {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Cards / Sections */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+
+    .card:hover {
+      border-color: var(--border-color);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .card-icon {
+      width: 28px;
+      height: 28px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    /* Grid Layout */
+    .grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    /* Rows */
+    .row {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .row-stretch {
+      align-items: stretch;
+    }
+
+    /* Form Elements */
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    label.inline {
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+    }
+
+    input[type="text"],
+    select {
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+      padding: 10px 14px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      transition: var(--transition);
+      min-width: 0;
+    }
+
+    input[type="text"]:hover,
+    select:hover {
+      border-color: var(--border-color);
+    }
+
+    input[type="text"]:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    input[type="text"]::placeholder {
+      color: var(--text-muted);
+    }
+
+    textarea {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      padding: 14px 16px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      resize: vertical;
+      width: 100%;
+      transition: var(--transition);
+      line-height: 1.6;
+    }
+
+    textarea:hover {
+      border-color: var(--border-color);
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    textarea::placeholder {
+      color: var(--text-muted);
+      font-family: var(--font-ui);
+    }
+
+    /* Buttons */
+    .btn {
+      font-family: var(--font-ui);
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 10px 18px;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      box-shadow: var(--shadow-sm), 0 0 16px var(--accent-glow);
+    }
+
+    .btn-secondary {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .btn-secondary:hover {
+      background: var(--border-color);
+      border-color: var(--border-color);
+    }
+
+    .btn-danger {
+      background: transparent;
+      color: var(--danger);
+      border: 1px solid var(--danger);
+    }
+
+    .btn-danger:hover {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+      padding: 8px 12px;
+    }
+
+    .btn-ghost:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    /* Navigation Pills */
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-primary);
+      padding: 6px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .nav-btn {
+      font-family: var(--font-ui);
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 8px 16px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .nav-btn:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    .nav-position {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      color: var(--accent);
+      padding: 0 12px;
+      min-width: 80px;
+      text-align: center;
+    }
+
+    /* Search */
+    .search-group {
+      display: flex;
+      gap: 0;
+    }
+
+    .search-group input {
+      border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+      border-right: none;
+    }
+
+    .search-group .btn {
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+
+    /* Badge */
+    .badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+    }
+
+    .badge-accent {
+      background: var(--accent-glow);
+      color: var(--accent);
+    }
+
+    /* Helper Text */
+    .muted {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Input Group */
+    .input-group {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .input-group input,
+    .input-group select {
+      width: 100%;
+    }
+
+    /* Form Grid */
+    .form-row {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group-full {
+      grid-column: 1 / -1;
+    }
+
+    /* Result Box */
+    .result-box {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      max-height: 360px;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .result-box:empty::before {
+      content: "Results will appear here...";
+      color: var(--text-muted);
+      font-family: var(--font-ui);
+      font-style: italic;
+    }
+
+    /* References Section */
+    .ref-container {
+      margin-top: 12px;
+    }
+
+    .ref-item {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-top: 12px;
+      transition: var(--transition);
+    }
+
+    .ref-item:hover {
+      border-color: var(--border-color);
+    }
+
+    .ref-header {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .ref-header label {
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ref-body {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Action Bar */
+    .action-bar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-subtle);
+      margin-top: 16px;
+    }
+
+    /* Flex utilities */
+    .flex-1 {
+      flex: 1;
+    }
+
+    .ml-auto {
+      margin-left: auto;
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-tertiary);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-secondary);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 16px;
+      }
+
+      .grid-2,
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .header h1 {
+        font-size: 1.5rem;
+      }
+
+      .nav-controls {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      animation: fadeIn 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-icon">📊</div>
+      <div>
+        <h1>Dataset Annotator</h1>
+        <p class="header-subtitle">VKG/OBDA Sample Annotation Tool</p>
+      </div>
+    </header>
+
+    <!-- Global Settings -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">⚙️</div>
+        <h2 class="card-title">Global Settings</h2>
+      </div>
+      <div class="row">
+        <div class="input-group">
+          <label>
+            Annotator (stored locally)
+            <input type="text" id="annotator" placeholder="Your name" />
+          </label>
+        </div>
+        <div class="input-group" style="flex: 2;">
+          <label>
+            VKG Endpoint
+            <input type="text" id="endpoint" placeholder="http://localhost:8080/sparql" />
+          </label>
+        </div>
+        <button class="btn btn-secondary" id="saveSettings" style="align-self: flex-end;">Save Settings</button>
+        <span class="muted" id="settingsInfo" style="align-self: flex-end;"></span>
+      </div>
+    </div>
+
+    <!-- Dataset Files -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📁</div>
+        <h2 class="card-title">Dataset Files</h2>
+        <span class="badge">resources/datasets</span>
+      </div>
+      <div class="row">
+        <div class="input-group">
+          <label>
+            Open File
+            <select id="fileSelect"></select>
+          </label>
+        </div>
+        <button class="btn btn-ghost" id="refreshFiles" style="align-self: flex-end;">↻ Refresh</button>
+        <div class="input-group">
+          <label>
+            New File
+            <input type="text" id="newFileName" placeholder="new_file.jsonl" />
+          </label>
+        </div>
+        <button class="btn btn-primary" id="createFile" style="align-self: flex-end;">+ Create</button>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🧭</div>
+        <h2 class="card-title">Navigation</h2>
+      </div>
+      <div class="row">
+        <div class="nav-controls">
+          <button class="nav-btn" id="prev">◀ Previous</button>
+          <span class="nav-position" id="position">- / -</span>
+          <button class="nav-btn" id="next">Next ▶</button>
+        </div>
+        <div class="search-group" style="margin-left: 16px;">
+          <input type="text" id="searchId" placeholder="Search by ID..." style="min-width: 200px;" />
+          <button class="btn btn-primary" id="goId">Go</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sample Editor -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">✏️</div>
+        <h2 class="card-title">Sample Editor</h2>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="field_id">Sample ID</label>
+          <input type="text" id="field_id" placeholder="DEST-SF-0001" />
+        </div>
+        <div class="form-group">
+          <label for="field_vkg">VKG Name</label>
+          <input type="text" id="field_vkg" placeholder="DEST" />
+        </div>
+        <div class="form-group">
+          <label for="field_type">Sample Type</label>
+          <select id="field_type">
+            <option value="ONTOLOGY_ONLY">ONTOLOGY_ONLY</option>
+            <option value="UNMAPPED_TEXT">UNMAPPED_TEXT</option>
+            <option value="SUBFIELD_TOKEN">SUBFIELD_TOKEN</option>
+            <option value="HYBRID_MIXED">HYBRID_MIXED</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group form-group-full">
+          <label for="field_question">Information Need</label>
+          <textarea id="field_question" style="height: 100px;" placeholder="Enter the natural language question..."></textarea>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group form-group-full">
+          <label for="field_sparql">SPARQL Query (with PREFIX, executable)</label>
+          <textarea id="field_sparql" style="height: 200px;" placeholder="PREFIX ...\nSELECT ... WHERE { ... }"></textarea>
+        </div>
+      </div>
+
+      <!-- References -->
+      <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-subtle);">
+        <div class="row" style="margin-bottom: 12px;">
+          <div class="card-header" style="margin: 0;">
+            <div class="card-icon">📎</div>
+            <h3 class="card-title">References</h3>
+          </div>
+          <button class="btn btn-secondary" id="addRef">+ Add Reference</button>
+          <span class="muted">Each reference contains: type, purpose, content, and optional triples (NT format).</span>
+        </div>
+        <div id="refs_container" class="ref-container"></div>
+      </div>
+
+      <div class="action-bar">
+        <button class="btn btn-primary" id="saveSample">💾 Save (Update)</button>
+        <button class="btn btn-secondary" id="newSample">+ New (Append)</button>
+        <button class="btn btn-danger" id="deleteSample">🗑 Delete</button>
+      </div>
+    </div>
+
+    <!-- Execute SPARQL -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">▶️</div>
+        <h2 class="card-title">Execute SPARQL</h2>
+      </div>
+      <div class="row" style="margin-bottom: 16px;">
+        <button class="btn btn-primary" id="runSparql">▶ Run Query</button>
+      </div>
+      <div class="result-box" id="result"></div>
+    </div>
+
+    <!-- Import / Export -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📤</div>
+        <h2 class="card-title">Import / Export</h2>
+      </div>
+      <div class="form-row">
+        <div class="form-group form-group-full">
+          <label for="import_json">
+            Import from JSON (extracts vkg/sample_type/question/sparql/references; ID auto-generated as example-*)
+          </label>
+          <textarea id="import_json" style="height: 140px;" placeholder='{"vkg":"DEST","question":"...","sample_type":"ONTOLOGY_ONLY","sparql":"PREFIX ...","references":[...]}'></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="importJsonBtn">📥 Import JSON (Append)</button>
+        <button class="btn btn-secondary" id="exportMinimalBtn">📋 Copy as Minimal JSON</button>
+        <span class="muted">Import auto-generates example-* ID; conflicts will append _2.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reference Item Template (cloned by JS) -->
+  <template id="ref_item_template">
+    <div class="ref-item">
+      <div class="ref-header">
+        <label class="inline">
+          Type:
+          <select class="ref-type">
+            <option value="text">text</option>
+            <option value="markdown">markdown</option>
+            <option value="sparql">sparql</option>
+            <option value="uri">uri</option>
+          </select>
+        </label>
+        <label class="inline flex-1">
+          Purpose:
+          <input type="text" class="ref-purpose" placeholder="How to use this content" style="flex: 1;" />
+        </label>
+        <button class="btn btn-danger ref-remove" title="Remove this reference">Remove</button>
+      </div>
+      <div class="ref-body">
+        <div class="form-group">
+          <label>Content</label>
+          <textarea class="ref-content" style="height: 100px;" placeholder="Reference content..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Triples (NT format, one per line, optional)</label>
+          <textarea class="ref-triples" style="height: 80px;" placeholder="<subject> <predicate> <object> ."></textarea>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

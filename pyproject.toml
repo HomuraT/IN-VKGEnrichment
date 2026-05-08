@@ -1,0 +1,26 @@
+[project]
+name = "extending-vkg-data-access"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "datasets>=4.0.0",
+    "jinja2>=3.1.6",
+    "langchain>=0.3.27",
+    "langchain-chroma>=0.2.6",
+    "langchain-openai>=0.3.33",
+    "rdflib>=7.1.4",
+    "loguru>=0.7.2",
+    "langchain-community>=0.3.29",
+    "faiss-cpu>=1.12.0",
+    "fastapi>=0.110.0",
+    "uvicorn>=0.37.0",
+    "ipykernel>=7.0.1",
+    "matplotlib>=3.10.7",
+    "httpx[http2]>=0.28.1",
+]
+
+[[tool.uv.index]]
+url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
+default = true
